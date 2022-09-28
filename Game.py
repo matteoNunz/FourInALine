@@ -7,17 +7,13 @@ Example of reinforcement learning applied to a game:
     -> the training can be between the 2 artificial player and also during the game with a human player
 """
 import sys
-
 import numpy as np
-
 from pathlib import Path
-
 from numpy.random import rand
 from tqdm import tqdm
 
 import Player
 from Enumerations import CellState, GameState
-
 from Player import ArtificialPlayer, HumanPlayer
 
 from tkinter import Tk, Canvas, Entry, Button, PhotoImage, Message , Menu
@@ -287,6 +283,11 @@ class GUI(Client):
                 mainWindow.mainloop()
 
     def showResult(self , message):
+        """
+        Method that prints the result of the game
+        :param message: message containing the winner
+        :return: nothing
+        """
         mainWindow.quit()
         resultMessage = Message(
             self.mainWindow,
@@ -374,6 +375,11 @@ class CLI(Client):
         print('-----------------------------')
 
     def showResult(self , message):
+        """
+        Method that prints the result of the game
+        :param message: message containing the winner
+        :return: nothing
+        """
         print(message)
 
 
@@ -408,7 +414,6 @@ class Game:
         positions = []
         for i in range(BOARD_COLS):
             # If the column i is not complete, an action can be done on that column
-            # toDo: check the following if -> 0 or (BOARD_ROWS - 1)
             if self.board[BOARD_ROWS-1, i] == CellState.empty_Value:
                 # Append the column that is not full
                 positions.append(i)
@@ -481,11 +486,12 @@ class Game:
         for x in range(BOARD_ROWS):
             for y in range(BOARD_COLS):
                 if self.board[x, y] != CellState.empty_Value:
-
+                    # If the first player won
                     if self.winner_check(x, y, 1, 0) == 4 or self.winner_check(x, y, 0, 1) == 4 or \
                             self.winner_check(x, y, 1, 1) == 4 or self.winner_check(x, y, -1, 1) == 4:
                         self.isEnd = True
                         return GameState.WIN
+                    # If the second player won
                     if self.winner_check(x, y, 1, 0) == -4 or self.winner_check(x, y, 0, 1) == -4 or \
                             self.winner_check(x, y, 1, 1) == -4 or self.winner_check(x, y, -1, 1) == -4:
                         self.isEnd = True
@@ -503,7 +509,7 @@ class Game:
 
     def giveRewards(self):
         """
-        According to the result send the reward to the player in  the game
+        According to the result send the reward to the player in the game
         :return: nothing
         """
         result = self.winner()

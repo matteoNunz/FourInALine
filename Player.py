@@ -9,7 +9,6 @@ Example of reinforcement learning applied to a game:
 
 import pickle
 from pathlib import Path
-
 import numpy as np
 
 from Enumerations import CellState
@@ -66,11 +65,15 @@ class ArtificialPlayer(Player):
         :param exp_rate: constant indicating the probability of performing a random action
         """
         super().__init__(name, symbol)
-        self.states = []  # To save all positions taken
-        self.states_value = {}  # State -> value
+
+        # To save all positions taken
+        self.states = []
+        # State -> value
+        self.states_value = {}
         # Epsilon-greedy method to balance between exploration and exploitation
         self.exp_rate = exp_rate
-        self.lr = 0.5  # learning rate
+        # learning rate
+        self.lr = 0.5
         self.gamma = 0.9
 
     def getHash(self, board, board_rows=6, board_cols=7):
@@ -177,7 +180,9 @@ class ArtificialPlayer(Player):
     def action_check(self, board, symbol):
         """
         Check the board and search for end game conditions
-        :return: a GameState value referred to the first player (self.player1)
+        :param board: the board game
+        :param symbol: symbol to check for
+        :return: True if the player with symbol win, False otherwise
         """
 
         if symbol == CellState.X_Value:
@@ -190,10 +195,13 @@ class ArtificialPlayer(Player):
             for y in range(board.shape[1]):
                 if board[x, y] != CellState.empty_Value:
 
-                    if self.winner_check(board, x, y, 1, 0) == value or self.winner_check(board, x, y, 0, 1) == value or \
-                            self.winner_check(board, x, y, 1, 1) == value or self.winner_check(board, x, y, -1, 1) == value:
+                    if self.winner_check(board, x, y, 1, 0) == value or \
+                            self.winner_check(board, x, y, 0, 1) == value or \
+                            self.winner_check(board, x, y, 1, 1) == value or \
+                            self.winner_check(board, x, y, -1, 1) == value:
                         return True
 
+        # If no winner
         return False
 
     def addState(self, state):
