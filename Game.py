@@ -617,6 +617,7 @@ class Game:
                     client.last_action = (self.get_available_x(action), action)
                 # Update the board
                 self.updateState(action)
+                self.activePlayer.addState(self.getHash())
 
                 # Check if the active player won
                 winner = self.winner()

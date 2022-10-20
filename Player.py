@@ -73,7 +73,7 @@ class ArtificialPlayer(Player):
         # Epsilon-greedy method to balance between exploration and exploitation
         self.exp_rate = exp_rate
         # learning rate
-        self.lr = 0.5
+        self.lr = 0.8
         self.gamma = 0.9
 
     def getHash(self, board, board_rows=6, board_cols=7):
@@ -219,13 +219,22 @@ class ArtificialPlayer(Player):
         :return: nothing
         """
         # print("Updating value")
+        next_state = None
+        # print("In order states are: ", self.states)
+        # print("Reversed states are: ", [x for x in reversed(self.states)])
         for state in reversed(self.states):
             # If it's a new state never visited before
             if self.states_value.get(state) is None:
                 self.states_value[state] = 0
-            # Update the existing value using reinforcement learning formula
-            self.states_value[state] = (1 - self.lr) * self.states_value[state] \
-                                       + self.lr * (reward + self.gamma * self.states_value[state])
+            if next_state is not None:
+                # Update the existing value using reinforcement learning formula
+                self.states_value[state] = (1 - self.lr) * self.states_value[state] \
+                                           + self.lr * (reward + self.gamma * self.states_value[next_state])
+            else:
+                # Update the existing value using reinforcement learning formula
+                self.states_value[state] = (1 - self.lr) * self.states_value[state] + self.lr * reward
+            # Save the current state to use it in the next iteration
+            next_state = state
 
     def reset(self):
         """
